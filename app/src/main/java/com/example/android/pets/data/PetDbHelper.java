@@ -16,13 +16,7 @@ import static com.example.android.pets.data.PetContract.PetEntry._ID;
 
 public class PetDbHelper extends SQLiteOpenHelper {
 
-    //Database creation sql statement
-    private static final String DATABASE_CREATE = "CREATE TABLE " + TABLE_NAME +
-            "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PET_NAME +
-            " TEXT NOT NULL, " + COLUMN_PET_BREED + " TEXT, " + COLUMN_PET_GENDER +
-            " INTEGER NOT NULL, " + COLUMN_PET_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
-
-    public static final String DATABASE_NAME = "DBpets";
+    public static final String DATABASE_NAME = "shelter.db";
     public static final int DATABASE_VERSION = 1;
 
     public PetDbHelper(Context context){
@@ -30,8 +24,12 @@ public class PetDbHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(DATABASE_CREATE);
+    public void onCreate(SQLiteDatabase db) {
+        String DATABASE_CREATE = "CREATE TABLE " + TABLE_NAME +
+                "(" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PET_NAME +
+                " TEXT NOT NULL, " + COLUMN_PET_BREED + " TEXT, " + COLUMN_PET_GENDER +
+                " INTEGER NOT NULL, " + COLUMN_PET_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
+        db.execSQL(DATABASE_CREATE);
     }
 
     @Override
