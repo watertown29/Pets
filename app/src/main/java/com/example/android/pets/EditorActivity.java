@@ -43,11 +43,6 @@ import static com.example.android.pets.data.PetContract.PetEntry.GENDER_UNKNOWN;
  */
 public class EditorActivity extends AppCompatActivity {
 
-    /**
-     * declare an instance of a PetDbHelper
-     */
-    private PetDbHelper mDbHelper;
-
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
 
@@ -78,8 +73,6 @@ public class EditorActivity extends AppCompatActivity {
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
 
         setupSpinner();
-
-        mDbHelper = new PetDbHelper(this);
     }
 
     /**
@@ -133,6 +126,11 @@ public class EditorActivity extends AppCompatActivity {
         } else {
             genderString = "Female";
         }
+
+        /**
+         * create a PetDbHelper
+         */
+        PetDbHelper mDbHelper = new PetDbHelper(this);
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
