@@ -18,7 +18,7 @@ public class PetProvider extends ContentProvider {
     /**
      * Create a PetDbHelper object to gain access to the pets database
      */
-    PetDbHelper mDbHelper;
+    private PetDbHelper mDbHelper;
 
     /**
      * Initialize the provider and the database helper object.
