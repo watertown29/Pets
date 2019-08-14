@@ -30,6 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.example.android.pets.data.PetContract.PetEntry;
+import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_GENDER;
+import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_NAME;
+import static com.example.android.pets.data.PetContract.PetEntry._ID;
 
 import com.example.android.pets.data.PetDbHelper;
 
@@ -73,10 +76,25 @@ public class CatalogActivity extends AppCompatActivity {
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Integer gender = PetEntry.GENDER_FEMALE;
+        String genderString = gender.toString();
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
-        Cursor cursor = db.rawQuery("SELECT * FROM " + PetEntry.TABLE_NAME, null);
+        String[] projection = {
+                _ID,
+                COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT };
+
+        Cursor cursor = db.query(
+                PetEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
+
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
@@ -92,9 +110,9 @@ public class CatalogActivity extends AppCompatActivity {
     private void insertPet() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(PetEntry.COLUMN_PET_NAME, "Toto");
+        values.put(COLUMN_PET_NAME, "Toto");
         values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
-        values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
+        values.put(COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
         long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
 
