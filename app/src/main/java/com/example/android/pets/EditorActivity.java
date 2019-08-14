@@ -118,14 +118,6 @@ public class EditorActivity extends AppCompatActivity {
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         int weightInt = Integer.parseInt(mWeightEditText.getText().toString().trim());
-        String genderString;
-        if (mGender == 0){
-            genderString = "Unknown";
-        } else if (mGender == 1){
-            genderString = "Male";
-        } else {
-            genderString = "Female";
-        }
 
         /**
          * create a PetDbHelper
@@ -136,7 +128,7 @@ public class EditorActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(PetContract.PetEntry.COLUMN_PET_NAME, nameString);
         values.put(PetContract.PetEntry.COLUMN_PET_BREED, breedString);
-        values.put(PetContract.PetEntry.COLUMN_PET_GENDER, genderString);
+        values.put(PetContract.PetEntry.COLUMN_PET_GENDER, mGender);
         values.put(PetContract.PetEntry.COLUMN_PET_WEIGHT, weightInt);
         long newRowId = db.insert(PetContract.PetEntry.TABLE_NAME, null, values);
 
