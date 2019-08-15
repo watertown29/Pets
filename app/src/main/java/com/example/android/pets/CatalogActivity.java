@@ -34,6 +34,7 @@ import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_BREE
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_GENDER;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_NAME;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_WEIGHT;
+import static com.example.android.pets.data.PetContract.PetEntry.CONTENT_URI;
 import static com.example.android.pets.data.PetContract.PetEntry._ID;
 
 import com.example.android.pets.data.PetDbHelper;
@@ -72,15 +73,6 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        PetDbHelper mDbHelper = new PetDbHelper(this);
-
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Integer gender = PetEntry.GENDER_FEMALE;
-        String genderString = gender.toString();
-
         String[] projection = {
                 _ID,
                 COLUMN_PET_NAME,
@@ -88,14 +80,9 @@ public class CatalogActivity extends AppCompatActivity {
                 COLUMN_PET_GENDER,
                 PetEntry.COLUMN_PET_WEIGHT };
 
-        Cursor cursor = db.query(
-                PetEntry.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null);
+        Cursor cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
+
+
 
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
 
