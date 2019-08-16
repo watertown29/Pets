@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import static com.example.android.pets.data.PetContract.CONTENT_AUTHORITY;
+import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_BREED;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_GENDER;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_NAME;
+import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_WEIGHT;
 
 /**
  * {@link ContentProvider} for Pets app.
@@ -161,7 +163,60 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        return 0;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            case PET_ID:
+                // For the PET_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a String array containing the actual ID.
+                selection = PetContract.PetEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+    }
+
+    /**
+     * Update pets in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
+     * Return the number of rows that were successfully updated.
+     */
+    private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+
+        if (values.containsKey(COLUMN_PET_GENDER)){
+            Integer gender = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_GENDER);
+            if (gender == null || !PetContract.PetEntry.isValidGender(gender)) {
+                throw new IllegalArgumentException("Pet requires valid gender");
+            }
+        }
+
+        if (values.containsKey(COLUMN_PET_NAME)){
+            // Check that the name is not null
+            String name = values.getAsString(PetContract.PetEntry.COLUMN_PET_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Pet requires a name");
+            }
+        }
+
+        if (values.containsKey(COLUMN_PET_WEIGHT)){
+            // Check that the weight is positive
+            Integer weight = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_WEIGHT);
+            if (weight != null && weight < 0) {
+                throw new IllegalArgumentException("Pet requires valid weight");
+            }
+        }
+
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        // Returns the number of database rows affected by the update statement
+        return db.update(PetContract.PetEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     /**
