@@ -41,6 +41,8 @@ import android.widget.Toast;
 import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetDbHelper;
 
+import java.net.URI;
+
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_BREED;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_GENDER;
 import static com.example.android.pets.data.PetContract.PetEntry.COLUMN_PET_NAME;
@@ -96,6 +98,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTitle("Add a Pet");
         } else {
             setTitle(getString(R.string.editor_activity_title_edit));
+            //Prepare the loader
+            getSupportLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
         }
 
         //Set title
@@ -107,9 +111,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
 
         setupSpinner();
-
-        //Prepare the loader
-        getSupportLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
     }
 
     /**
