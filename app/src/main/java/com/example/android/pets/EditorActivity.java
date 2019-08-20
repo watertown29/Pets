@@ -59,6 +59,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     //integer loader constant
     private static final int EXISTING_PET_LOADER = 0;
 
+    //values variable
+    ContentValues values;
+
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
 
@@ -94,7 +97,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             setTitle(getString(R.string.editor_activity_title_edit));
         }
-
 
         //Set title
 
@@ -154,7 +156,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String breedString = mBreedEditText.getText().toString().trim();
         int weightInt = Integer.parseInt(mWeightEditText.getText().toString().trim());
 
-        ContentValues values = new ContentValues();
+        values = new ContentValues();
         values.put(PetContract.PetEntry.COLUMN_PET_NAME, nameString);
         values.put(PetContract.PetEntry.COLUMN_PET_BREED, breedString);
         values.put(PetContract.PetEntry.COLUMN_PET_GENDER, mGender);
@@ -188,8 +190,30 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                //Save pet to the database
-                insertPet();
+
+                if (mCurrentPetUri == null) {
+                    insertPet();
+                } else {
+                    String nameString = mNameEditText.getText().toString().trim();
+                    String breedString = mBreedEditText.getText().toString().trim();
+                    int weightInt = Integer.parseInt(mWeightEditText.getText().toString().trim());
+
+                    values = new ContentValues();
+                    values.put(PetContract.PetEntry.COLUMN_PET_NAME, nameString);
+                    values.put(PetContract.PetEntry.COLUMN_PET_BREED, breedString);
+                    values.put(PetContract.PetEntry.COLUMN_PET_GENDER, mGender);
+                    values.put(PetContract.PetEntry.COLUMN_PET_WEIGHT, weightInt);
+                    int rowsAffected = getContentResolver().update(mCurrentPetUri, values, null, null);
+                    if (rowsAffected == 0) {
+                        // If no rows were affected, then there was an error with the update.
+                        Toast.makeText(this, getString(R.string.editor_update_pet_failed),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Otherwise, the update was successful and we can display a toast.
+                        Toast.makeText(this, getString(R.string.editor_update_pet_successful),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
                 //exit activity
                 finish();
                 return true;
