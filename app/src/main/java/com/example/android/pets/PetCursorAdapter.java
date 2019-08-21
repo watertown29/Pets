@@ -66,7 +66,7 @@ public class PetCursorAdapter extends CursorAdapter {
         String petName = cursor.getString(name);
         String petBreed = cursor.getString(breed);
         if (TextUtils.isEmpty(petBreed)){
-            petBreed = "Unknown Breed";
+            petBreed = context.getString(R.string.unknown_breed);
         }
         //Set TextViews to returned cursor text
         nameText.setText(petName);
