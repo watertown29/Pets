@@ -2,6 +2,7 @@ package com.example.android.pets;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,9 @@ public class PetCursorAdapter extends CursorAdapter {
         //Read the pet attributes from the cursor for the current pet
         String petName = cursor.getString(name);
         String petBreed = cursor.getString(breed);
+        if (TextUtils.isEmpty(petBreed)){
+            petBreed = "Unknown Breed";
+        }
         //Set TextViews to returned cursor text
         nameText.setText(petName);
         breedText.setText(petBreed);
